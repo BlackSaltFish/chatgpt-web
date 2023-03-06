@@ -28,12 +28,16 @@ func (c *ChatController) Index(ctx *gin.Context) {
 
 //Completion 回复
 func (c *ChatController) Completion(ctx *gin.Context) {
+
 	var request gogpt.ChatCompletionRequest
+
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		c.ResponseJson(ctx, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
+	user := ctx.MustGet(gin.AuthUserKey).(string)
+	logger.Info("user:" + user)
 	logger.Info(request)
 	if len(request.Messages) == 0 {
 		c.ResponseJson(ctx, http.StatusBadRequest, "request messages required", nil)
@@ -41,6 +45,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 	}
 
 	cnf := config.LoadConfig()
+
 	client := gogpt.NewClient(cnf.ApiKey)
 	if request.Messages[0].Role != "system" {
 		newMessage := append([]gogpt.ChatCompletionMessage{
@@ -66,7 +71,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 		for _, item := range request.Messages {
 			prompt += item.Content + "/n"
 		}
-		prompt = strings.Trim(prompt,"/n")
+		prompt = strings.Trim(prompt, "/n")
 
 		logger.Info("request prompt is %s", prompt)
 		req := gogpt.CompletionRequest{
@@ -91,6 +96,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 				Content: resp.Choices[0].Text,
 			}),
 		})
+
 	}
 
 }

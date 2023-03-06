@@ -7,6 +7,12 @@ import './chatui-theme.css';
 import axios from "axios";
 import ReactMarkdown from 'react-markdown'
 
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { Button } from '@chatui/core';
+
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism'
+
 const defaultQuickReplies = [
     {
         name: '清空会话',
@@ -19,7 +25,7 @@ const defaultQuickReplies = [
 const initialMessages = [
     {
         type: 'text',
-        content: {text: '您好，我是AI助理，开源于：https://github.com/869413421/chatgpt-web。'},
+        content: {text: '您好,请问有什么可以帮您'},
         user: {avatar: '//gitclone.com/download1/gitclone.png'},
     },
 ];
@@ -74,7 +80,33 @@ function App() {
         switch (type) {
             case 'text':
                 let text = content.text
-                return <Bubble><ReactMarkdown children={text}/></Bubble>;
+                return <Bubble>
+                    <ReactMarkdown children={text} components={{
+                        code({node, inline, className, children, ...props}) {
+                            const match = /language-(\w+)/.exec(className || '')
+                            return !inline && match ? (
+                                <div>
+                                <CopyToClipboard text={children}>
+                                    <Button>复制代码</Button>
+                                </CopyToClipboard>
+
+                                <SyntaxHighlighter
+                                    children={String(children).replace(/\n$/, '')}
+                                    style={darcula}
+                                    language={match[1]}
+                                    PreTag="div"
+                                    showLineNumbers
+                                    {...props}
+                                />
+                                </div>
+                            ) : (
+                                <code className={className} {...props}>
+                                    {children}
+                                </code>
+                            )
+                        }
+                    }}  />
+                </Bubble>;
             default:
                 return null;
         }

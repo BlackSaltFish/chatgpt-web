@@ -10,6 +10,11 @@ import (
 	"sync"
 )
 
+type User struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
 // Configuration 项目配置
 type Configuration struct {
 	// gpt apikey
@@ -26,6 +31,7 @@ type Configuration struct {
 	TopP             float32 `json:"top_p"`
 	PresencePenalty  float32 `json:"presence_penalty"`
 	FrequencyPenalty float32 `json:"frequency_penalty"`
+	Users            []User  `json:"users"`
 }
 
 var config *Configuration
@@ -81,7 +87,6 @@ func LoadConfig() *Configuration {
 		if BotDesc != "" {
 			config.BotDesc = BotDesc
 		}
-
 
 		if MaxTokens != "" {
 			max, err := strconv.Atoi(MaxTokens)

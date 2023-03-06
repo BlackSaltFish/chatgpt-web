@@ -9,7 +9,7 @@ import (
 var chatController = NewChatController()
 
 // RegisterWebRoutes 注册路由
-func RegisterWebRoutes(router *gin.Engine) {
+func RegisterWebRoutes(router *gin.RouterGroup) {
 	router.Use(middlewares.Cors())
 	router.GET("/", chatController.Index)
 	router.POST("/completion", chatController.Completion)
