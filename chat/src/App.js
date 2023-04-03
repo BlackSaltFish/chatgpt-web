@@ -1,5 +1,5 @@
 import './App.css';
-import Chat, {Bubble, Progress, toast, useMessages} from '@chatui/core';
+import Chat, {Bubble, Button, Progress, toast, useMessages} from '@chatui/core';
 import '@chatui/core/dist/index.css';
 import '@chatui/core/es/styles/index.less';
 import React, {useState} from 'react';
@@ -8,7 +8,6 @@ import axios from "axios";
 import ReactMarkdown from 'react-markdown'
 
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Button } from '@chatui/core';
 
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -22,11 +21,13 @@ const defaultQuickReplies = [
 ];
 
 
+let aiAvatar = '//gitclone.com/download1/gitclone.png';
+
 const initialMessages = [
     {
         type: 'text',
         content: {text: '您好,请问有什么可以帮您'},
-        user: {avatar: '//gitclone.com/download1/gitclone.png'},
+        user: {avatar: aiAvatar},
     },
 ];
 
@@ -35,11 +36,13 @@ let userAvatar = '//gitclone.com/download1/user.png';
 
 let chatContext = [];
 
-axios.post('avatar',
-   ).then((response) => {
-       if (response.data.avatar != '') {
-           userAvatar = response.data.avatar
-       }
+axios.post('avatar',).then((response) => {
+        if (response.data.avatar != '') {
+            userAvatar = response.data.avatar
+        }
+        if (response.data.aiavatar != '') {
+            aiAvatar = response.data.aiavatar
+        }
     }
 ).catch(err => {
     // 错误处理
@@ -151,7 +154,7 @@ function App() {
                 appendMsg({
                     type: 'text',
                     content: {text: reply},
-                    user: {avatar: '//gitclone.com/download1/gitclone.png'},
+                    user: {avatar: aiAvatar},
                 });
                 chatContext = response.data.data.messages
                 console.log(chatContext)

@@ -38,11 +38,16 @@ func (c *ChatController) Avatar(ctx *gin.Context) {
 
 	u := userMap[user]
 	avatar := ""
+	aiavatar := ""
 	if u.Avatar != "" {
 		avatar = u.Avatar
 	}
+	if u.AIAvatar != "" {
+		aiavatar = u.AIAvatar
+	}
 	ctx.JSON(200, gin.H{
-		"avatar": avatar,
+		"avatar":   avatar,
+		"aiavatar": aiavatar,
 	})
 }
 
