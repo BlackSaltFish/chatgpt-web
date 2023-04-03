@@ -13,6 +13,7 @@ import (
 type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
+	BotDesc  string `json:"bot_desc"`
 }
 
 // Configuration 项目配置

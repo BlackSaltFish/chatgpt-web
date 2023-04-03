@@ -7,7 +7,10 @@ import (
 	gogpt "github.com/sashabaranov/go-gpt3"
 	"net/http"
 	"strings"
+	"sync"
 )
+
+var once sync.Once
 
 // ChatController 首页控制器
 type ChatController struct {
@@ -26,8 +29,19 @@ func (c *ChatController) Index(ctx *gin.Context) {
 	})
 }
 
+var botDescMap = map[string]string{}
+
 //Completion 回复
 func (c *ChatController) Completion(ctx *gin.Context) {
+
+	once.Do(func() {
+		cnf := config.LoadConfig()
+		users := cnf.Users
+
+		for _, u := range users {
+			botDescMap[u.Name] = u.BotDesc
+		}
+	})
 
 	var request gogpt.ChatCompletionRequest
 
@@ -47,9 +61,15 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 	cnf := config.LoadConfig()
 
 	client := gogpt.NewClient(cnf.ApiKey)
+
+	botDesc := cnf.BotDesc
+	if botDescMap[user] != "" {
+		botDesc = botDescMap[user]
+	}
+
 	if request.Messages[0].Role != "system" {
 		newMessage := append([]gogpt.ChatCompletionMessage{
-			{Role: "system", Content: cnf.BotDesc},
+			{Role: "system", Content: botDesc},
 		}, request.Messages...)
 		request.Messages = newMessage
 		logger.Info(request.Messages)
