@@ -21,21 +21,23 @@ const defaultQuickReplies = [
 ];
 
 
-let aiAvatar = '//gitclone.com/download1/gitclone.png';
+let chatContext = [];
 
 const initialMessages = [
-    {
-        type: 'text',
-        content: {text: '您好,请问有什么可以帮您'},
-        user: {avatar: aiAvatar},
-    },
+    // {
+    //     type: 'text',
+    //     content: {text: '您好,请问有什么可以帮您'},
+    //     user: {avatar: aiAvatar},
+    // },
 ];
 
+
+
+let aiAvatar = '//gitclone.com/download1/gitclone.png';
 let userAvatar = '//gitclone.com/download1/user.png';
 
 
-let chatContext = [];
-
+let AppendMsg = null;
 axios.post('avatar',).then((response) => {
         if (response.data.avatar != '') {
             userAvatar = response.data.avatar
@@ -43,17 +45,27 @@ axios.post('avatar',).then((response) => {
         if (response.data.aiavatar != '') {
             aiAvatar = response.data.aiavatar
         }
+        if (AppendMsg) {
+            AppendMsg({
+                type: 'text',
+                content: {text: '您好,请问有什么可以帮您'},
+                user: {avatar: aiAvatar},
+            });
+        }
     }
 ).catch(err => {
     // 错误处理
     toast.fail("请求出错，" + err.response.data.errorMsg)
-});
+})
+
 
 
 function App() {
-    const {messages, appendMsg, setTyping} = useMessages(initialMessages);
     const [percentage, setPercentage] = useState(0);
+    const {messages, appendMsg, setTyping} = useMessages(initialMessages);
 
+
+    AppendMsg = appendMsg;
 
     // clearQuestion 清空文本特殊字符
     function clearQuestion(requestText) {
@@ -167,7 +179,7 @@ function App() {
     }
 
     return (
-        <div style={{height: 'calc(100vh - 10px)', marginTop: '-5px'}}>
+        <div style={{height: 'calc(100vh - 10px)', marginTop: '-5px'}} oncomp>
             <Chat
                 navbar={{
                     leftContent: {
