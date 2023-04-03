@@ -30,7 +30,20 @@ const initialMessages = [
     },
 ];
 
+let userAvatar = '//gitclone.com/download1/gitclone.png';
+
+
 let chatContext = [];
+
+axios.post('avatar',
+   ).then((response) => {
+    userAvatar = response.data.avatar
+    }
+).catch(err => {
+    // 错误处理
+    toast.fail("请求出错，" + err.response.data.errorMsg)
+});
+
 
 function App() {
     const {messages, appendMsg, setTyping} = useMessages(initialMessages);
@@ -65,7 +78,7 @@ function App() {
                 type: 'text',
                 content: {text: val},
                 position: 'left',
-                user: {avatar: '//gitclone.com/download1/user.png'},
+                user: {avatar: userAvatar},
             });
 
             setTyping(true);
@@ -127,7 +140,7 @@ function App() {
 
 
         let url = "completion"
-        // url = "http://127.0.0.1:8080/completion"
+
         axios.post(url,
             {
                 "messages": chatContext,

@@ -29,19 +29,38 @@ func (c *ChatController) Index(ctx *gin.Context) {
 	})
 }
 
-var botDescMap = map[string]string{}
+func (c *ChatController) Avatar(ctx *gin.Context) {
+
+	once.Do(initUser)
+
+	user := ctx.MustGet(gin.AuthUserKey).(string)
+	logger.Info("user:" + user)
+
+	u := userMap[user]
+	avatar := "//gitclone.com/download1/gitclone.png"
+	if u.Avatar != "" {
+		avatar = u.Avatar
+	}
+	ctx.JSON(200, gin.H{
+		"avatar": avatar,
+	})
+}
+
+func initUser() {
+	cnf := config.LoadConfig()
+	users := cnf.Users
+
+	for _, u := range users {
+		userMap[u.Name] = u
+	}
+}
+
+var userMap = map[string]config.User{}
 
 //Completion 回复
 func (c *ChatController) Completion(ctx *gin.Context) {
 
-	once.Do(func() {
-		cnf := config.LoadConfig()
-		users := cnf.Users
-
-		for _, u := range users {
-			botDescMap[u.Name] = u.BotDesc
-		}
-	})
+	once.Do(initUser)
 
 	var request gogpt.ChatCompletionRequest
 
@@ -63,8 +82,8 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 	client := gogpt.NewClient(cnf.ApiKey)
 
 	botDesc := cnf.BotDesc
-	if botDescMap[user] != "" {
-		botDesc = botDescMap[user]
+	if userMap[user].BotDesc != "" {
+		botDesc = userMap[user].BotDesc
 	}
 
 	if request.Messages[0].Role != "system" {
@@ -117,6 +136,15 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 			}),
 		})
 
+		/*
+			c.ResponseJson(ctx, http.StatusOK, "", gin.H{
+				"reply": "123",
+				"messages": append(request.Messages, gogpt.ChatCompletionMessage{
+					Role:    "assistant",
+					Content: "456",
+				}),
+			})
+		*/
 	}
 
 }

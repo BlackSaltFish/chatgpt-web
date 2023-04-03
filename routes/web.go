@@ -13,4 +13,5 @@ func RegisterWebRoutes(router *gin.RouterGroup) {
 	router.Use(middlewares.Cors())
 	router.GET("/", chatController.Index)
 	router.POST("/completion", chatController.Completion)
+	router.POST("/avatar", chatController.Avatar)
 }

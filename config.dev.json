@@ -11,7 +11,8 @@
   "users": [
     {
       "name": "yyds",
-      "password": "yyds"
+      "password": "yyds",
+      "avatar": ""
     }
   ]
 }

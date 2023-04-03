@@ -14,6 +14,7 @@ type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 	BotDesc  string `json:"bot_desc"`
+	Avatar   string `json:"avatar"`
 }
 
 // Configuration 项目配置
