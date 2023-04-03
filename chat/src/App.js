@@ -30,14 +30,16 @@ const initialMessages = [
     },
 ];
 
-let userAvatar = '//gitclone.com/download1/gitclone.png';
+let userAvatar = '//gitclone.com/download1/user.png';
 
 
 let chatContext = [];
 
 axios.post('avatar',
    ).then((response) => {
-    userAvatar = response.data.avatar
+       if (response.data.avatar != '') {
+           userAvatar = response.data.avatar
+       }
     }
 ).catch(err => {
     // 错误处理

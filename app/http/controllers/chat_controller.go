@@ -37,7 +37,7 @@ func (c *ChatController) Avatar(ctx *gin.Context) {
 	logger.Info("user:" + user)
 
 	u := userMap[user]
-	avatar := "//gitclone.com/download1/gitclone.png"
+	avatar := ""
 	if u.Avatar != "" {
 		avatar = u.Avatar
 	}
