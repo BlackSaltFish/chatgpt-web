@@ -36,3 +36,6 @@
         transform: rotate(360deg);
     }
 }
+
+.Bubble.text ol {white-space:normal}
+.Bubble.text ol li {margin-top:10px}
