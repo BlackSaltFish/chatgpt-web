@@ -179,7 +179,7 @@ function App() {
     }
 
     return (
-        <div style={{height: 'calc(100vh - 10px)', marginTop: '-5px'}} oncomp>
+        <div class="App" oncomp>
             <Chat
                 navbar={{
                     leftContent: {

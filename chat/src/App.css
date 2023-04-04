@@ -50,10 +50,20 @@
     .Message.left .Bubble {
         max-width: 80%;
     }
+    .App {
+        height: calc(100vh - 50px);
+        margin-top: -5px;
+    }
 }
 
 @media screen and (min-width: 960px) {
     .Message.left .Bubble {
         max-width: 50%;
     }
+
+    .App {
+        height: calc(100vh - 10px);
+        margin-top: -5px;
+    }
+
 }
