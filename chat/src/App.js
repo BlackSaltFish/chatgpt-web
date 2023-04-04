@@ -179,7 +179,7 @@ function App() {
     }
 
     return (
-        <div class="App" oncomp>
+        <div class="AppComp" oncomp>
             <Chat
                 navbar={{
                     leftContent: {

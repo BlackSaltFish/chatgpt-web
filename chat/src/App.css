@@ -50,7 +50,7 @@
     .Message.left .Bubble {
         max-width: 80%;
     }
-    .App {
+    .AppComp {
         height: calc(100vh - 50px);
         margin-top: -5px;
     }
@@ -61,7 +61,7 @@
         max-width: 50%;
     }
 
-    .App {
+    .AppComp {
         height: calc(100vh - 10px);
         margin-top: -5px;
     }
