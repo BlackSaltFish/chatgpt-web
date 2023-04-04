@@ -117,6 +117,14 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 		logger.Info(request.Messages)
 	}
 
+	var response []gogpt.ChatCompletionMessage = nil
+
+	if len(request.Messages) > 1 {
+		response = request.Messages[1:]
+	} else {
+		response = []gogpt.ChatCompletionMessage{}
+	}
+
 	if cnf.Model == gogpt.GPT3Dot5Turbo0301 || cnf.Model == gogpt.GPT3Dot5Turbo {
 		request.Model = cnf.Model
 		resp, err := client.CreateChatCompletion(ctx, request)
@@ -126,7 +134,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 		}
 		c.ResponseJson(ctx, http.StatusOK, "", gin.H{
 			"reply":    resp.Choices[0].Message.Content,
-			"messages": append(request.Messages, resp.Choices[0].Message),
+			"messages": append(response, resp.Choices[0].Message),
 		})
 	} else {
 		prompt := ""
@@ -153,7 +161,7 @@ func (c *ChatController) Completion(ctx *gin.Context) {
 
 		c.ResponseJson(ctx, http.StatusOK, "", gin.H{
 			"reply": resp.Choices[0].Text,
-			"messages": append(request.Messages, gogpt.ChatCompletionMessage{
+			"messages": append(response, gogpt.ChatCompletionMessage{
 				Role:    "assistant",
 				Content: resp.Choices[0].Text,
 			}),
