@@ -39,3 +39,21 @@
 
 .Bubble.text ol {white-space:normal}
 .Bubble.text ol li {margin-top:10px}
+
+.Message.left .Bubble {
+    max-width: 80%;
+}
+
+
+
+@media screen and (max-width: 960px){
+    .Message.left .Bubble {
+        max-width: 80%;
+    }
+}
+
+@media screen and (min-width: 960px) {
+    .Message.left .Bubble {
+        max-width: 50%;
+    }
+}
