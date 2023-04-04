@@ -5,7 +5,9 @@ import (
 	"github.com/869413421/chatgpt-web/pkg/logger"
 	"github.com/gin-gonic/gin"
 	gogpt "github.com/sashabaranov/go-gpt3"
+	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -29,6 +31,14 @@ func (c *ChatController) Index(ctx *gin.Context) {
 	})
 }
 
+var qqAvatars = []string{}
+
+func init() {
+	for i := 0; i <= 105; i++ {
+		qqAvatars = append(qqAvatars, "./static/qqavatar/"+strconv.Itoa(i)+".webb")
+	}
+}
+
 func (c *ChatController) Avatar(ctx *gin.Context) {
 
 	once.Do(initUser)
@@ -40,10 +50,18 @@ func (c *ChatController) Avatar(ctx *gin.Context) {
 	avatar := ""
 	aiavatar := ""
 	if u.Avatar != "" {
-		avatar = u.Avatar
+		if u.Avatar == "random" {
+			avatar = qqAvatars[rand.Intn(len(qqAvatars)-1)]
+		} else {
+			avatar = u.Avatar
+		}
 	}
 	if u.AIAvatar != "" {
-		aiavatar = u.AIAvatar
+		if u.AIAvatar == "random" {
+			aiavatar = qqAvatars[rand.Intn(len(qqAvatars)-1)]
+		} else {
+			aiavatar = u.AIAvatar
+		}
 	}
 	ctx.JSON(200, gin.H{
 		"avatar":   avatar,
